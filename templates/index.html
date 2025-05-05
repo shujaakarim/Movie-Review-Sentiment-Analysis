@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sentiment Analysis</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      color: #fff;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      resize: none;
+    }
+
+    button {
+      background-color: #00b894;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #00a383;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎬 Movie Review Sentiment Analyzer</h1>
+    <textarea id="review" placeholder="Enter your review here..."></textarea>
+    <br />
+    <button onclick="analyzeSentiment()">Analyze Sentiment</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function analyzeSentiment() {
+      const review = document.getElementById('review').value;
+      const resultDiv = document.getElementById('result');
+
+      if (!review.trim()) {
+        resultDiv.innerText = "❗ Please enter a review!";
+        return;
+      }
+
+      resultDiv.innerText = "🔍 Analyzing...";
+
+      try {
+        const response = await fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ review: review }),
+        });
+
+        const data = await response.json();
+
+        if (data.sentiment) {
+          resultDiv.innerText = `✅ Predicted Sentiment: ${data.sentiment}`;
+        } else {
+          resultDiv.innerText = "❌ Unable to analyze sentiment.";
+        }
+      } catch (error) {
+        resultDiv.innerText = "⚠️ Server error. Please try again later.";
+      }
+    }
+  </script>
+
+</body>
+</html>
