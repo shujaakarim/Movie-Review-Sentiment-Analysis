@@ -29,7 +29,3 @@ model training, and deployment using Flask.
 3. Model training using machine learning algorithms  
 4. Model evaluation  
 5. Deployment with Flask  
-
----
-
-## Project Structure
